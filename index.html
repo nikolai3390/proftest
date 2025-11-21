@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профориентационный тест</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        header {
+            padding: 30px;
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .step-number {
+            background: #3498db;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: bold;
+        }
+        
+        .divider {
+            height: 2px;
+            background: #bdc3c7;
+            margin: 0 20px;
+        }
+        
+        main {
+            padding: 30px;
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        /* Стили для выбора роли */
+        .role-selection {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .role-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .role-btn {
+            padding: 15px 30px;
+            border: 2px solid #3498db;
+            background: white;
+            color: #3498db;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+        
+        .role-btn:hover {
+            background: #3498db;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .role-btn.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        /* Стили для формы входа */
+        .login-form {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .login-btn:hover {
+            background: #219a52;
+        }
+        
+        /* Стили для панели куратора */
+        .curator-panel {
+            text-align: center;
+        }
+        
+        .students-list {
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .student-card {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            text-align: left;
+        }
+        
+        .student-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .student-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+        
+        .student-class {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .test-date {
+            color: #95a5a6;
+            font-size: 12px;
+        }
+        
+        .professions-list {
+            margin-top: 10px;
+        }
+        
+        .profession-tag {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin: 2px;
+        }
+        
+        .no-students {
+            background: #f8f9fa;
+            padding: 40px;
+            border-radius: 8px;
+            color: #7f8c8d;
+            text-align: center;
+        }
+        
+        .curator-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        /* Стили для теста */
+        .progress-bar {
+            height: 6px;
+            background: #ecf0f1;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: #27ae60;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .question-container {
+            margin-bottom: 20px;
+        }
+        
+        #question-text {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            padding: 12px 15px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option:hover {
+            border-color: #3498db;
+            background: #f8f9fa;
+        }
+        
+        .option.selected {
+            background: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: #2980b9;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: #7f8c8d;
+        }
+        
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-success:hover:not(:disabled) {
+            background: #219a52;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        #results-container {
+            text-align: center;
+        }
+        
+        .profession {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .back-to-login {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .back-btn:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Как это работает</h1>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Тестирование</h3>
+                    <p>Ответьте на 20 вопросов</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Анализ</h3>
+                    <p>Система определит склонности</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Результаты</h3>
+                    <p>Получите рекомендации</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="divider"></div>
+
+        <main>
+            <!-- Экран выбора роли -->
+            <div id="role-selection-screen">
+                <h2>Выберите роль</h2>
+                <div class="role-selection">
+                    <p>Пожалуйста, выберите как вы хотите войти в систему</p>
+                    <div class="role-buttons">
+                        <button class="role-btn" data-role="student">Ученик</button>
+                        <button class="role-btn" data-role="curator">Куратор</button>
+                    </div>
+                </div>
+                
+                <!-- Форма для ученика -->
+                <div id="student-login" class="login-form hidden">
+                    <h3>Вход для ученика</h3>
+                    <div class="form-group">
+                        <label for="student-name">ФИО ученика</label>
+                        <input type="text" id="student-name" placeholder="Введите ваше ФИО">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-class">Класс/Группа</label>
+                        <input type="text" id="student-class" placeholder="Например: 10А">
+                    </div>
+                    <button class="login-btn" id="student-login-btn">Начать тестирование</button>
+                </div>
+                
+                <!-- Форма для куратора -->
+                <div id="curator-login" class="login-form hidden">
+                    <h3>Вход для куратора</h3>
+                    <div class="form-group">
+                        <label for="curator-name">ФИО куратора</label>
+                        <input type="text" id="curator-name" placeholder="Введите ваше ФИО">
+                    </div>
+                    <div class="form-group">
+                        <label for="curator-password">Пароль</label>
+                        <input type="password" id="curator-password" placeholder="Введите пароль">
+                    </div>
+                    <button class="login-btn" id="curator-login-btn">Войти как куратор</button>
+                </div>
+            </div>
+            
+            <!-- Панель куратора (скрыта по умолчанию) -->
+            <div id="curator-panel" class="hidden">
+                <h2>Панель куратора</h2>
+                <div class="user-info" style="background: #e8f4fd; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center;">
+                    <strong>Куратор:</strong> <span id="curator-display-name"></span>
+                </div>
+                
+                <h3>Список учеников, прошедших тестирование</h3>
+                <div class="students-list" id="students-list">
+                    <!-- Список учеников будет загружен здесь -->
+                </div>
+                
+                <div class="curator-actions">
+                    <button id="curator-test-btn" class="btn btn-primary">Пройти тест</button>
+                    <button id="curator-logout-btn" class="btn btn-secondary">Выйти</button>
+                </div>
+            </div>
+            
+            <!-- Экран теста (скрыт по умолчанию) -->
+            <div id="quiz-screen" class="hidden">
+                <h2>Профориентационный тест</h2>
+                
+                <div id="user-info" style="background: #e8f4fd; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center;">
+                    <!-- Информация о пользователе -->
+                </div>
+                
+                <div id="quiz-container">
+                    <div class="progress-bar">
+                        <div class="progress" id="progress"></div>
+                    </div>
+                    
+                    <div class="question-container">
+                        <h3 id="question-text">Вам нравится работать с техникой и механизмами?</h3>
+                        <div class="options" id="options-container">
+                            <!-- Варианты ответов загружаются через JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="navigation">
+                        <button id="prev-btn" class="btn btn-secondary" disabled>Назад</button>
+                        <button id="next-btn" class="btn btn-primary">Далее</button>
+                        <button id="results-btn" class="btn btn-success hidden">Показать результаты</button>
+                    </div>
+                </div>
+                
+                <div class="back-to-login">
+                    <button id="back-to-login" class="back-btn">Выйти</button>
+                </div>
+            </div>
+            
+            <!-- Экран результатов (скрыт по умолчанию) -->
+            <div id="results-container" class="hidden">
+                <h3>Ваши результаты</h3>
+                <div id="results-content">
+                    <!-- Результаты появятся здесь -->
+                </div>
+                <div style="margin-top: 20px;">
+                    <button id="restart-btn" class="btn btn-primary">Пройти тест заново</button>
+                    <button id="back-to-role" class="btn btn-secondary">Выйти в меню</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Данные для входа куратора
+        const CURATOR_PASSWORD = "curator123";
+        
+        // Хранилище результатов учеников (в реальном приложении это должно быть на сервере)
+        let studentsResults = JSON.parse(localStorage.getItem('studentsResults')) || [];
+        
+        // Вопросы теста
+        const questions = [
+            "Вам нравится работать с техникой и механизмами?",
+            "Вы любите общаться с людьми и помогать им?",
+            "Вам нравится работать с числами и расчетами?",
+            "Вы творческий человек?",
+            "Вам нравится работать на открытом воздухе?",
+            "Вы предпочитаете работать в офисе?",
+            "Вам нравится учить и объяснять?",
+            "Вы хорошо работаете в стрессовых ситуациях?",
+            "Вам нравится анализировать информацию?",
+            "Вы предпочитаете ручной труд?",
+            "Вам нравится заниматься исследованиями?",
+            "Вы хорошо работаете в команде?",
+            "Вам нравится создавать что-то новое?",
+            "Вы внимательны к деталям?",
+            "Вам нравится работать с компьютерами?",
+            "Вы легко адаптируетесь к изменениям?",
+            "Вам нравится организовывать работу?",
+            "Вы терпеливы в работе с людьми?",
+            "Вам нравится решать сложные задачи?",
+            "Вы предпочитаете четкие инструкции?"
+        ];
+
+        let currentQuestion = 0;
+        let answers = new Array(questions.length).fill(null);
+        let currentUser = null;
+        let userRole = null;
+
+        // Элементы DOM
+        const roleSelectionScreen = document.getElementById('role-selection-screen');
+        const curatorPanel = document.getElementById('curator-panel');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsContainer = document.getElementById('results-container');
+        const studentLogin = document.getElementById('student-login');
+        const curatorLogin = document.getElementById('curator-login');
+        const studentsList = document.getElementById('students-list');
+        const curatorDisplayName = document.getElementById('curator-display-name');
+        const userInfo = document.getElementById('user-info');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resultsBtn = document.getElementById('results-btn');
+        const progress = document.getElementById('progress');
+        const restartBtn = document.getElementById('restart-btn');
+        const backToLoginBtn = document.getElementById('back-to-login');
+        const backToRoleBtn = document.getElementById('back-to-role');
+        const curatorTestBtn = document.getElementById('curator-test-btn');
+        const curatorLogoutBtn = document.getElementById('curator-logout-btn');
+
+        // Обработчики выбора роли
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const role = this.dataset.role;
+                userRole = role;
+                
+                // Сбрасываем активные кнопки
+                document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Показываем соответствующую форму входа
+                studentLogin.classList.add('hidden');
+                curatorLogin.classList.add('hidden');
+                
+                if (role === 'student') {
+                    studentLogin.classList.remove('hidden');
+                } else {
+                    curatorLogin.classList.remove('hidden');
+                }
+            });
+        });
+
+        // Вход для ученика
+        document.getElementById('student-login-btn').addEventListener('click', function() {
+            const name = document.getElementById('student-name').value.trim();
+            const studentClass = document.getElementById('student-class').value.trim();
+            
+            if (!name || !studentClass) {
+                alert('Пожалуйста, заполните все поля');
+                return;
+            }
+            
+            currentUser = {
+                name: name,
+                class: studentClass,
+                role: 'student'
+            };
+            
+            startTest();
+        });
+
+        // Вход для куратора
+        document.getElementById('curator-login-btn').addEventListener('click', function() {
+            const name = document.getElementById('curator-name').value.trim();
+            const password = document.getElementById('curator-password').value;
+            
+            if (!name || !password) {
+                alert('Пожалуйста, заполните все поля');
+                return;
+            }
+            
+            if (password !== CURATOR_PASSWORD) {
+                alert('Неверный пароль');
+                return;
+            }
+            
+            currentUser = {
+                name: name,
+                role: 'curator'
+            };
+            
+            showCuratorPanel();
+        });
+
+        // Показать панель куратора
+        function showCuratorPanel() {
+            roleSelectionScreen.classList.add('hidden');
+            curatorPanel.classList.remove('hidden');
+            curatorDisplayName.textContent = currentUser.name;
+            loadStudentsList();
+        }
+
+        // Загрузка списка учеников
+        function loadStudentsList() {
+            if (studentsResults.length === 0) {
+                studentsList.innerHTML = `
+                    <div class="no-students">
+                        <h4>Пока нет результатов</h4>
+                        <p>Ученики еще не проходили тестирование</p>
+                    </div>
+                `;
+                return;
+            }
+
+            studentsList.innerHTML = studentsResults.map((student, index) => `
+                <div class="student-card">
+                    <div class="student-header">
+                        <div>
+                            <div class="student-name">${student.name}</div>
+                            <div class="student-class">${student.class}</div>
+                        </div>
+                        <div class="test-date">${new Date(student.date).toLocaleDateString('ru-RU')}</div>
+                    </div>
+                    <div class="professions-list">
+                        <strong>Рекомендуемые профессии:</strong><br>
+                        ${student.professions.map(prof => 
+                            `<span class="profession-tag">${prof}</span>`
+                        ).join(' ')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Куратор проходит тест
+        curatorTestBtn.addEventListener('click', function() {
+            startTest();
+        });
+
+        // Выход куратора
+        curatorLogoutBtn.addEventListener('click', function() {
+            resetToLogin();
+        });
+
+        // Начало теста
+        function startTest() {
+            roleSelectionScreen.classList.add('hidden');
+            curatorPanel.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            
+            // Показываем информацию о пользователе
+            if (currentUser.role === 'student') {
+                userInfo.innerHTML = `
+                    <strong>Ученик:</strong> ${currentUser.name} 
+                    | <strong>Класс:</strong> ${currentUser.class}
+                    | <strong>Роль:</strong> Ученик
+                `;
+            } else {
+                userInfo.innerHTML = `
+                    <strong>Куратор:</strong> ${currentUser.name}
+                    | <strong>Роль:</strong> Куратор (режим просмотра)
+                `;
+            }
+            
+            loadQuestion();
+        }
+
+        // Загрузка вопроса
+        function loadQuestion() {
+            questionText.textContent = questions[currentQuestion];
+            updateProgress();
+            updateNavigation();
+            
+            // Очищаем варианты ответов
+            optionsContainer.innerHTML = '';
+            
+            // Создаем новые варианты ответов
+            const options = [
+                "Да, очень нравится",
+                "Скорее да, чем нет", 
+                "Затрудняюсь ответить",
+                "Скорее нет, чем да",
+                "Нет, не нравится"
+            ];
+            
+            options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                if (answers[currentQuestion] === index + 1) {
+                    optionElement.classList.add('selected');
+                }
+                optionElement.textContent = option;
+                optionElement.dataset.value = index + 1;
+                optionElement.addEventListener('click', () => selectOption(optionElement));
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+
+        // Выбор варианта ответа
+        function selectOption(optionElement) {
+            // Убираем выделение у всех вариантов
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Выделяем выбранный вариант
+            optionElement.classList.add('selected');
+            
+            // Сохраняем ответ
+            answers[currentQuestion] = parseInt(optionElement.dataset.value);
+            updateNavigation();
+        }
+
+        // Обновление прогресса
+        function updateProgress() {
+            const progressPercent = ((currentQuestion + 1) / questions.length) * 100;
+            progress.style.width = `${progressPercent}%`;
+        }
+
+        // Обновление навигации
+        function updateNavigation() {
+            prevBtn.disabled = currentQuestion === 0;
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.classList.add('hidden');
+                resultsBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                resultsBtn.classList.add('hidden');
+            }
+            
+            // Активируем кнопку "Далее" только если выбран ответ
+            nextBtn.disabled = answers[currentQuestion] === null;
+            resultsBtn.disabled = answers.includes(null);
+        }
+
+        // Анализ результатов
+        function analyzeResults() {
+            const techScore = answers[0] + answers[4] + answers[9] + answers[14];
+            const socialScore = answers[1] + answers[6] + answers[11] + answers[17];
+            const analyticScore = answers[2] + answers[7] + answers[13] + answers[18];
+            const creativeScore = answers[3] + answers[8] + answers[12] + answers[15];
+            
+            let recommendedProfessions = [];
+            
+            if (techScore >= 15) {
+                recommendedProfessions.push("Инженер", "Техник", "Программист", "Механик");
+            }
+            if (socialScore >= 15) {
+                recommendedProfessions.push("Учитель", "Врач", "Психолог", "Менеджер");
+            }
+            if (analyticScore >= 15) {
+                recommendedProfessions.push("Бухгалтер", "Аналитик", "Финансист", "Исследователь");
+            }
+            if (creativeScore >= 15) {
+                recommendedProfessions.push("Дизайнер", "Художник", "Архитектор", "Маркетолог");
+            }
+            
+            // Убираем дубликаты
+            recommendedProfessions = [...new Set(recommendedProfessions)];
+            
+            // Если нет явных предпочтений, показываем общие профессии
+            if (recommendedProfessions.length === 0) {
+                recommendedProfessions = ["Администратор", "Продавец", "Оператор", "Курьер"];
+            }
+            
+            return recommendedProfessions;
+        }
+
+        // Показ результатов
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            
+            const recommendedProfessions = analyzeResults();
+            
+            // Сохраняем результаты ученика
+            if (currentUser.role === 'student') {
+                const studentResult = {
+                    name: currentUser.name,
+                    class: currentUser.class,
+                    date: new Date().toISOString(),
+                    professions: recommendedProfessions
+                };
+                
+                studentsResults.push(studentResult);
+                localStorage.setItem('studentsResults', JSON.stringify(studentsResults));
+            }
+            
+            // Отображаем результаты
+            const resultsContent = document.getElementById('results-content');
+            resultsContent.innerHTML = `
+                <div style="background: #e8f4fd; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                    <strong>Тестирование завершено:</strong><br>
+                    ${currentUser.role === 'student' ? 
+                      `Ученик: ${currentUser.name} (${currentUser.class})` : 
+                      `Куратор: ${currentUser.name}`}
+                </div>
+                <p>На основе ваших ответов мы подобрали следующие профессии:</p>
+                <div style="margin-top: 20px;">
+                    ${recommendedProfessions.map(prof => 
+                        `<div class="profession">${prof}</div>`
+                    ).join('')}
+                </div>
+                <p style="margin-top: 20px; color: #7f8c8d;">
+                    Это рекомендации на основе ваших предпочтений. 
+                    Для более точного выбора проконсультируйтесь со специалистом.
+                </p>
+            `;
+        }
+
+        // Навигация по тесту
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestion < questions.length - 1 && answers[currentQuestion] !== null) {
+                currentQuestion++;
+                loadQuestion();
+            }
+        });
+
+        resultsBtn.addEventListener('click', showResults);
+
+        // Кнопки возврата
+        backToLoginBtn.addEventListener('click', () => {
+            if (confirm('Вы уверены, что хотите выйти? Ваши ответы не сохранятся.')) {
+                if (currentUser.role === 'curator') {
+                    showCuratorPanel();
+                } else {
+                    resetToLogin();
+                }
+            }
+        });
+
+        backToRoleBtn.addEventListener('click', function() {
+            if (currentUser.role === 'curator') {
+                showCuratorPanel();
+            } else {
+                resetToLogin();
+            }
+        });
+
+        restartBtn.addEventListener('click', () => {
+            currentQuestion = 0;
+            answers = new Array(questions.length).fill(null);
+            resultsContainer.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            loadQuestion();
+        });
+
+        // Сброс к экрану входа
+        function resetToLogin() {
+            currentQuestion = 0;
+            answers = new Array(questions.length).fill(null);
+            currentUser = null;
+            userRole = null;
+            
+            // Очищаем формы
+            document.getElementById('student-name').value = '';
+            document.getElementById('student-class').value = '';
+            document.getElementById('curator-name').value = '';
+            document.getElementById('curator-password').value = '';
+            
+            // Сбрасываем UI
+            roleSelectionScreen.classList.remove('hidden');
+            curatorPanel.classList.add('hidden');
+            quizScreen.classList.add('hidden');
+            resultsContainer.classList.add('hidden');
+            studentLogin.classList.add('hidden');
+            curatorLogin.classList.add('hidden');
+            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+        }
+    </script>
+</body>
+</html>
